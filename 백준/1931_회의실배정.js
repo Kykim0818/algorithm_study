@@ -16,39 +16,53 @@ function solution( input){
     // let answerCase = [];
     // console.log('input', input);
     const caseCount = parseInt(input[CASE_COUNT_INDEX]);
-    // # 회의 제일 끝시간 찾기 max
-    let lastEndTime = 0;
+    const meetingTimes = [];
     for(let i = 1; i <= caseCount; i++){
-        lastEndTime = Math.max(lastEndTime, input[i].split(' ')[1]);
+        const inputCase = input[i].split(' ');
+        meetingTimes.push([parseInt(inputCase[0]), parseInt(inputCase[1])]);
     }
-    // console.log('lastEndTime', lastEndTime);
 
+    //끝나는 시간이 빠른 순서 기준으로 sort
+    meetingTimes.sort((aTime, bTime) => {
+        const aStartTime = aTime[0];
+        const bStartTime = bTime[0];
+        const aEndTime = aTime[1];
+        const bEndTime = bTime[1];
+
+        if(aEndTime < bEndTime){
+            return -1;
+        }
+        if(aEndTime > bEndTime){
+            return 1;
+        }
+        if(aEndTime === bEndTime){
+            if(aStartTime < bStartTime) return -1;
+            return 1;
+        }
+        return 0;
+    })
     //
     let startCondition = 0;
-    //
-    for (let endCondition = 0; endCondition<= lastEndTime; endCondition++){
-        for(let i = 1; i <= caseCount; i++){
-            const startTime = parseInt(input[i].split(' ')[0]);
-            const endTime = parseInt(input[i].split(' ')[1]);
-            //
-            if(startCondition <= startTime && endCondition >= endTime){
-                answerCase.push({startTime, endTime});
-                answer++;
-                startCondition = endTime;
-                endCondition = endTime;
-                break;
-            }
-
-            // 영역에 포함되는 케이스가 없음
-            if(i === caseCount) {
-                endCondition++;
-            }
+    for(let i = 0; i < meetingTimes.length; i++){
+        const startTime = meetingTimes[i][0];
+        const endTime = meetingTimes[i][1];
+        if(startCondition <= startTime || startTime === endTime){
+            answer++;
+            startCondition = endTime;
         }
     }
-    // console.log('answerCase', answerCase);
+
+
     console.log(answer);
     // return answer;
 }
 solution(input)
 
 // console.log(solution(input));
+
+/**
+ * 2
+1 1
+0 1
+2
+ */
