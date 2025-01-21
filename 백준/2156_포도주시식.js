@@ -28,34 +28,17 @@ function solution(multiLineInput) {
     }
   } else {
     // wineAllCount >= 3
-    const memo = [
-      [wines[0], 1],
-      [wines[0] + wines[1], 2],
-    ];
-    for (let i = 2; i < wines.length; i++) {
-      const prevContinuosNum = memo[i - 1][1];
-      if (prevContinuosNum === 0 || prevContinuosNum === 1) {
-        memo[i] = [memo[i - 1][0] + wines[i], prevContinuosNum + 1];
-      }
-      if (prevContinuosNum === 2) {
-        const cases = [
-          [memo[i - 1][0] - wines[i - 1] + wines[i], 1],
-          [memo[i - 1][0] - wines[i - 2] + wines[i], 2],
-          [memo[i - 1][0], 0],
-        ];
-        let maxCase = cases[0];
-        for (let j = 1; j < cases.length; j++) {
-          if (maxCase[0] < cases[j][0]) {
-            maxCase = cases[j];
-          } else if (maxCase[0] === cases[j][0]) {
-            if (maxCase[0][1] > cases[j][1]) maxCase = cases[j];
-          }
-        }
-        memo.push([...maxCase]);
-      }
+    const memo = [0, wines[0], wines[0] + wines[1]];
+
+    for (let i = 3; i <= wines.length; i++) {
+      memo[i] = Math.max(
+        memo[i - 1],
+        memo[i - 2] + wines[i - 1],
+        memo[i - 3] + wines[i - 2] + wines[i - 1]
+      );
     }
-    console.log("memo", memo);
-    answer = memo[wineAllCount - 1][0];
+    answer = memo[wines.length];
+    // console.log(memo);
   }
   console.log("answer", answer);
   //   console.log("wines", wines);
@@ -64,3 +47,13 @@ function solution(multiLineInput) {
 }
 
 solution(multiLineInput);
+
+// 6 10 13 9 8 1
+
+// m1 = 6
+// m2 = 16
+
+// m3 =
+// 1. M(n-1) 안마시기
+// 2. M(n-2) + A 이전잔 안마시고 n번쨰잔만시기
+// 3. M(n-3) + 이전잔 마시고, n번쨰잔도 마시기
