@@ -1,5 +1,5 @@
 /**
- * @
+ * @완
  * @link https://www.acmicpc.net/problem/11399
  */
 const fs = require("fs");
