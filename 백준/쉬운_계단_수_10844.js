@@ -29,7 +29,7 @@ function solution(input) {
 
   let answer = 0;
   for (let i = 0; i <= 9; i++) {
-    answer += memo[numLength][i] % divider;
+    answer += memo[numLength][i];
   }
   console.log(answer % divider);
   return answer;
