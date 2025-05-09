@@ -1,4 +1,5 @@
 /**
+ * 완
  * @link https://www.acmicpc.net/problem/16918
  */
 const fs = require("fs");
@@ -15,20 +16,17 @@ let multiLineInput = fs
 
 const ROW_COL_SECOND_INDEX = 0;
 function solution(multiLineInput) {
-  const [row, col, second] =
+  const [inputRow, inputCol, second] =
     multiLineInput[ROW_COL_SECOND_INDEX].split(" ").map(Number);
 
   const MAP_EMPTY = ".";
   const MAP_BOMB_SETUP = "O";
   const map = [];
-  for (let i = 0; i < row; i++) {
+  for (let i = 0; i < inputRow; i++) {
     map.push(multiLineInput[i + 1].split(""));
   }
 
-  const mapState = Array.from(Array(row), () => Array(col).fill(0));
-  console.log("mapState", mapState);
-
-  let answer = "";
+  const mapState = Array.from(Array(inputRow), () => Array(inputCol).fill(0));
 
   for (let time = 1; time <= second; time++) {
     if (time === 1) {
@@ -36,17 +34,21 @@ function solution(multiLineInput) {
     } else {
       updateBomb();
     }
-    console.log("------------- current second %d", time);
-    console.table(map);
-    console.table(mapState);
+    // console.log("------------- current second %d", time);
+    // console.table(map);
+    // console.table(mapState);
   }
 
-  // console.log("input", multiLineInput);
+  const answer = [];
+  map.forEach((row) => {
+    answer.push(row.join(""));
+  });
+  console.log(answer.join("\n"));
   return answer;
 
   function nothing() {
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < col; j++) {
+    for (let i = 0; i < inputRow; i++) {
+      for (let j = 0; j < inputCol; j++) {
         if (map[i][j] === MAP_BOMB_SETUP) {
           mapState[i][j] = mapState[i][j] + 1;
         }
@@ -57,27 +59,43 @@ function solution(multiLineInput) {
   function updateBomb() {
     const dirRow = [0, 0, -1, 1];
     const dirCol = [-1, 1, 0, 0];
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < col; j++) {
+
+    const oneLeftBomb = [];
+    for (let i = 0; i < inputRow; i++) {
+      for (let j = 0; j < inputCol; j++) {
         if (map[i][j] === MAP_BOMB_SETUP) {
           mapState[i][j] = mapState[i][j] + 1;
-          if (mapState[i][j] === 3) {
-            // !!
-            mapState[i][j] = 0;
-            map[i][j] = MAP_EMPTY;
-            // 4방향처리
-            for (let dir = 0; dir < 4; dir++) {
-              mapState[i + dirRow[dir]][j + dirCol[dir]] = 0;
-              map[i + dirRow[dir]][j + dirCol[dir]] = MAP_EMPTY;
-            }
-          }
         } else {
           //
           map[i][j] = MAP_BOMB_SETUP;
           mapState[i][j] = 0;
         }
+
+        if (mapState[i][j] === 3) {
+          oneLeftBomb.push([i, j]);
+        }
       }
     }
+
+    oneLeftBomb.forEach(([i, j]) => {
+      // !!
+      mapState[i][j] = 0;
+      map[i][j] = MAP_EMPTY;
+      // 4방향처리
+      for (let dir = 0; dir < 4; dir++) {
+        const movRow = i + dirRow[dir];
+        const movCol = j + dirCol[dir];
+        if (
+          movRow >= 0 &&
+          movRow < inputRow &&
+          movCol >= 0 &&
+          movCol < inputCol
+        ) {
+          mapState[movRow][movCol] = 0;
+          map[movRow][movCol] = MAP_EMPTY;
+        }
+      }
+    });
   }
 }
 
