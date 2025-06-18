@@ -32,6 +32,8 @@ function leafSimilar(root1: TreeNode | null, root2: TreeNode | null): boolean {
     
     console.log('1', tree1Leafs);
     console.log('2', tree2Leafs);
+    if(tree1Leafs.length !== tree2Leafs.length) return false;
+
     let answer = true;
     for(let i = 0; i <tree1Leafs.length; i++){
         if(tree1Leafs[i] !== tree2Leafs[i]){
