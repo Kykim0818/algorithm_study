@@ -2,7 +2,6 @@ function isValid(s: string): boolean {
 
     const stack : string[] = [];
     const open = ['(', '{', '['];
-    const close = [')', '}', ']'];
     for(let i = 0 ; i< s.length; i++){
         const cur = s[i];
         if(open.includes(cur)){
@@ -22,9 +21,7 @@ function isValid(s: string): boolean {
             }
         }
     }
-
+    if(stack.length !== 0) return false;
     return true;
 };
 
-
-'(' '{' '['
